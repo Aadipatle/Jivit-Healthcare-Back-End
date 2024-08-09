@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
-
-dotenv.config()
+dotenv.config();
 const dbUrl = process.env.DATABASE_URL;
 
 
@@ -26,12 +25,11 @@ const userSchema = new mongoose.Schema({
     departmentName: String,
     departmentLocation: String,
     designation: String,
+    status:String
 });
 
 
 const User = mongoose.model('User', userSchema);
-
-
 
 export const allcustomers = async (req, res) => {
     try {
@@ -54,3 +52,13 @@ export const addcustomer = async (req, res) => {
     }
 }
 
+export const updateCustomerStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    try {
+        const updatedCustomer = await User.findByIdAndUpdate(id, { status: status }, { new: true });
+        res.json({ message: 'Status updated successfully', data: updatedCustomer });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating status', error: error.message });
+    }
+};
